@@ -6,3 +6,4 @@ faiss-cpu==1.7.4
 altair<5
 PyPDF2
 django-cors-headers
+djangorestframework
