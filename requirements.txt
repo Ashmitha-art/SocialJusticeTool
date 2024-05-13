@@ -7,3 +7,5 @@ altair<5
 PyPDF2
 django-cors-headers
 djangorestframework
+pgvector
+psycopg2-binary
