@@ -9,7 +9,22 @@ from django.http import FileResponse
 import os
 from django.conf import settings
 
+from .scripts.ollama_rag import run_llm
+import json
 
+def run_llm_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            search_term = data.get('searchTerm', '')
+            result = run_llm(search_term)
+            return JsonResponse({"result": result})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=400) 
+    
+    
 @api_view(['GET'])
 def hello_world(request):
     return Response({'message': 'Hello, world!'})

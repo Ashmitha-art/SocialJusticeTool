@@ -36,11 +36,29 @@ function App() {
     console.error('No file selected');
   }
 };
+  const handleSearch = async (searchTerm) => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/run_llm/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ searchTerm }),
+      });
 
-  const handleSearch = (searchTerm) => {
-    const randomAnswer = Math.random() > 0.5 ? 'Yes' : 'No';
-    setAnswers(randomAnswer);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setAnswers(data.result);
+    } catch (error) {
+      console.error('There has been a problem with your fetch operation:', error);
+      setAnswers('Error retrieving the answer.');
+    }
   };
+
+
 
   return (
     <div className="container">
