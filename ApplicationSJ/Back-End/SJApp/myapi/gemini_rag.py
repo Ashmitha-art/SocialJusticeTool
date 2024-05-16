@@ -1,14 +1,11 @@
 import os
 from pypdf import PdfReader
 from pathlib import Path
-import bs4
-from langchain import hub
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 import google.generativeai as genai
 from chromadb import Documents, EmbeddingFunction, Embeddings
 import chromadb
-from django.conf import settings
 import re
 from pypdf import PdfReader
 
@@ -48,16 +45,7 @@ def create_chroma_db(documents, path, name):
 
 
 def load_chroma_collection(path, name):
-    """
-    Loads an existing Chroma collection from the specified path with the given name.
-
-    Parameters:
-    - path (str): The path where the Chroma database is stored.
-    - name (str): The name of the collection within the Chroma database.
-
-    Returns:
-    - chromadb.Collection: The loaded Chroma Collection.
-    """
+  
     chroma_client = chromadb.PersistentClient(path=path)
     db = chroma_client.get_collection(name=name, embedding_function=GeminiEmbeddingFunction())
 
@@ -129,7 +117,7 @@ def run_llm():
     if db is None:
         db = create_chroma_db(documents=splits, path="\\", name="sjt")
 
-    answer = generate_answer(db[0],query="what are the course objectives")
+    answer = generate_answer(db[0],query="whats the class schedule?")
     print(answer)
 
 
