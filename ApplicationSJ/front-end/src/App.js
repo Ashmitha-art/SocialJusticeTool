@@ -36,11 +36,19 @@ function App() {
     console.error('No file selected');
   }
 };
+const handleSearch = (searchTerm) => {
+  console.log('Searching for:', searchTerm); // Log the search term
 
-  const handleSearch = (searchTerm) => {
-    const randomAnswer = Math.random() > 0.5 ? 'Yes' : 'No';
-    setAnswers(randomAnswer);
-  };
+  fetch(`http://127.0.0.1:8000/api/search/?query=${searchTerm}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Response from backend:', data); // Log the response from the backend
+      setAnswers(data.answer);
+    })
+    .catch(error => {
+      console.error('Error searching:', error);
+    });
+}; 
 
   return (
     <div className="container">

@@ -6,8 +6,7 @@ const AnswerDisplay = ({ answers }) => {
       <textarea
         rows="4"
         cols="50"
-        value={answers}
-        readOnly
+        value={answers || ''} readOnly
         className="answers-textarea"
       />
     </div>

@@ -90,9 +90,9 @@ def generate_answer(db,query):
     return answer
 
 
-def run_llm():
+def run_llm(query):
     
-    pdf_upload_path = "/Users/supriya/SF state/research project/SocialJusticeTool/ApplicationSJ/Back-End/SJApp/media/pdf_uploads"
+    pdf_upload_path = "/Users/ashmithapais/17thMay/SocialJusticeTool/ApplicationSJ/Back-End/SJApp/media/pdf_uploads"
     pdf_path = pdf_upload_path+'/file1.pdf'
 
     # Load the PDF file
@@ -108,21 +108,23 @@ def run_llm():
     # splits = text_splitter.split_documents(docs)
     split_text = re.split('\n \n', text)
     splits= [i for i in split_text if i != ""]
+    gen_answer_var = None
 
     try:
         db=load_chroma_collection("\\", name="sjt")
+        gen_answer_var = db
     except Exception as e:
         db = None
   
     if db is None:
         db = create_chroma_db(documents=splits, path="\\", name="sjt")
+        gen_answer_var = db[0]
 
-    answer = generate_answer(db[0],query="whats the class schedule?")
-    print(answer)
+    answer = generate_answer(gen_answer_var,query=query)
+    return answer
 
 
-if __name__== "__main__":
-    run_llm()
+
 
 
 
