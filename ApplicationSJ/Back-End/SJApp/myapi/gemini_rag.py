@@ -8,9 +8,18 @@ from chromadb import Documents, EmbeddingFunction, Embeddings
 import chromadb
 import re
 from pypdf import PdfReader
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent
-os.environ["GEMINI_API_KEY"]="AIzaSyC_y_RUsGZyWqk017g7CKpA4faPodLa2Qc"
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access the environment variable
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+os.environ["GEMINI_API_KEY"]=gemini_api_key
+print(gemini_api_key)
 
 class GeminiEmbeddingFunction(EmbeddingFunction):
    
