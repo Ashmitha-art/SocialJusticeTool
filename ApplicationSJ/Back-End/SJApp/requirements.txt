@@ -61,3 +61,4 @@ yarl==1.9.4
 chromadb
 pgvector
 psycopg2-binary
+nltk

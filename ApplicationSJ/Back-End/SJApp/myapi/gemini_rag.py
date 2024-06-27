@@ -10,6 +10,15 @@ import re
 from pypdf import PdfReader
 from dotenv import load_dotenv
 
+#NLTK sentiment analysis
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Download the VADER lexicon
+nltk.download('vader_lexicon')
+
+
+
 BASE_DIR = Path(__file__).resolve().parent
 
 # Load environment variables from .env file
@@ -111,6 +120,13 @@ def run_llm(query):
     text = ""
     for page in reader.pages:
         text += page.extract_text()
+
+    # Initialize the VADER sentiment intensity analyzer
+    sid = SentimentIntensityAnalyzer()
+
+    scores = sid.polarity_scores(text)
+    print(text)
+    print(scores)
 
     # Split
     # text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=200)
