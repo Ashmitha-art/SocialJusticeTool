@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.http import FileResponse
 import os
 from django.conf import settings
+# from myapi.gemini_rag import run_llm 
 from myapi.gemini_rag import run_llm 
 
 @api_view(['GET'])
