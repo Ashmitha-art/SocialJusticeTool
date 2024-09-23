@@ -1,5 +1,5 @@
 import os
-from pypdf import PdfReader
+import fitz  # PyMuPDF
 from pathlib import Path
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
@@ -8,13 +8,20 @@ from chromadb import Documents, EmbeddingFunction, Embeddings
 import chromadb
 import re
 from dotenv import load_dotenv
+from myapi.summarize import summarize_text
+import json
 
 # NLTK sentiment analysis
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-# Download the VADER lexicon
+# Pandas to save data to Excel
+import pandas as pd
+
+# Download the VADER lexicon and other necessary NLTK data
 nltk.download('vader_lexicon')
+nltk.download('punkt')
+nltk.download('stopwords')
 
 # Load environment variables from .env file
 load_dotenv()
@@ -85,6 +92,45 @@ def generate_answer(db, query):
     answer = generate_response(prompt)
     return answer
 
+def read_pdf(file_path):
+    with open(file_path, 'rb') as file:
+        reader = fitz.open(file_path)
+        number_of_pages = len(reader)
+        
+        text = ""
+        for page_num in range(number_of_pages):
+            page = reader.load_page(page_num)
+            text += page.get_text()
+
+        # Split text into sections based on common headings or keywords
+        parts = re.split(r'\n \n', text)  # Example split by paragraphs or a specific keyword
+        parts = [part for part in parts if part.strip()]  # Remove empty sections
+    return parts
+
+def get_sentiment_data(parts, output_excel_path="sentiment_analysis_results.xlsx", output_csv_path="sentiment_analysis_results.csv"):
+    sid = SentimentIntensityAnalyzer()
+    sentiment_data = []
+
+    for i, part in enumerate(parts):
+        ss = sid.polarity_scores(part)
+        sentiment_data.append({
+            'section': i + 1,
+            'text': part,
+            'compound': ss['compound'],  # Overall sentiment score
+            'pos': ss['pos'],
+            'neu': ss['neu'],
+            'neg': ss['neg']
+        })
+
+    # Save sentiment data to Excel file
+    df = pd.DataFrame(sentiment_data)
+    df.to_excel(output_excel_path, index=False)
+    df.to_csv(output_csv_path, index=False)  # Save to CSV format
+
+    print(f"Sentiment analysis saved to {output_excel_path} and {output_csv_path}")
+    return sentiment_data
+
+
 def run_llm(query):
     pdf_upload_path = os.getenv("PDF_UPLOAD_PATH")
     pdf_file_name = os.getenv("PDF_FILE_NAME")
@@ -96,38 +142,22 @@ def run_llm(query):
     pdf_upload_path = os.path.abspath(pdf_upload_path)
     pdf_path = os.path.join(pdf_upload_path, pdf_file_name)
 
-    # Load the PDF file
-    reader = PdfReader(pdf_path)
-    
-    # Loop over each page and store it in a variable
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text()
+    # Load and split the PDF into sections
+    pdf_parts = read_pdf(pdf_path)
 
-    # Initialize the VADER sentiment intensity analyzer
-    sid = SentimentIntensityAnalyzer()
+    # Perform sentiment analysis on the sections
+    sentiment_data = get_sentiment_data(pdf_parts)
+    print("Sentiment Data:", sentiment_data)
 
-    scores = sid.polarity_scores(text)
-    
-    print(scores)
-
-    # Split
-    split_text = re.split('\n \n', text)
-    splits = [i for i in split_text if i != ""]
-
-    gen_answer_var = None
-
+    # Initialize ChromaDB and add documents
     try:
         db = load_chroma_collection("\\", name="sjt")
-        gen_answer_var = db
     except Exception as e:
         db = None
   
     if db is None:
-        db = create_chroma_db(documents=splits, path="\\", name="sjt")
-        gen_answer_var = db[0]
+        db = create_chroma_db(documents=pdf_parts, path="\\", name="sjt")
 
-    answer = generate_answer(gen_answer_var, query=query)
+    # Generate an answer using the LLM
+    answer = generate_answer(db, query=query)
     return answer
-
-
