@@ -7,12 +7,44 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #f0f4f8;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      #charts {
+        display: flex;
+        flex-direction: column; /* Stack charts vertically */
+        align-items: center; /* Center charts horizontally */
+        gap: 30px; /* Space between charts */
+      }
+
+      .chart-container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 90%; /* Wider width for larger graphs */
+        max-width: 900px; /* Max width for responsiveness */
+      }
+
       .bar {
-        fill: steelblue;
+        fill: #9bc53d; /* Sage green color */
       }
 
       .bar:hover {
-        fill: orange;
+        fill: black; /* Change hover color to black */
       }
 
       .axis-label {
@@ -27,8 +59,28 @@
       }
 
       .chart-title {
-        font-size: 18px;
+        font-size: 20px; /* Larger title font size */
         margin: 10px 0;
+        text-align: center;
+        color: #2c3e50;
+      }
+
+      .legend {
+        display: flex;
+        justify-content: center; /* Center legends horizontally */
+        margin-top: 10px;
+      }
+
+      .legend div {
+        display: flex;
+        align-items: center;
+        margin-right: 15px; /* Space between legend items */
+      }
+
+      .legend-color {
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
       }
     </style>
   </head>
@@ -37,15 +89,15 @@
 
     <!-- File input to upload the Excel file -->
     <input type="file" id="fileInput" accept=".xlsx" />
-
+    <br />
     <!-- Placeholder for the charts -->
     <div id="charts"></div>
 
     <script>
       // Set the dimensions and margins of the graphs
-      const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 800 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+      const margin = { top: 20, right: 30, bottom: 40, left: 60 },
+        width = 700 - margin.left - margin.right, // Increased width
+        height = 400 - margin.top - margin.bottom; // Increased height
 
       // Create an SVG container for each chart
       function createSvg(title) {
@@ -121,6 +173,41 @@
               scoreType.charAt(0).toUpperCase() + scoreType.slice(1)
             } Sentiment Score`
           );
+
+        // Legend
+        const legendContainer = svg
+          .append("g")
+          .attr("class", "legend")
+          .attr("transform", `translate(0,${height + margin.bottom + 10})`); // Move legend below the graph
+
+        const colors = {
+          compound: "steelblue",
+          pos: "green",
+          neu: "gray",
+          neg: "red",
+        };
+
+        legendContainer
+          .selectAll(".legend-item")
+          .data(Object.entries(colors))
+          .enter()
+          .append("g")
+          .attr("class", "legend-item")
+          .attr("transform", (d, i) => `translate(${i * 100},0)`) // Spread legends horizontally
+          .each(function ([key, color]) {
+            d3.select(this)
+              .append("rect")
+              .attr("class", "legend-color")
+              .attr("width", 15)
+              .attr("height", 15)
+              .attr("fill", color);
+
+            d3.select(this)
+              .append("text")
+              .attr("x", 20)
+              .attr("y", 12)
+              .text(key.charAt(0).toUpperCase() + key.slice(1));
+          });
       }
 
       // Function to read the Excel file
