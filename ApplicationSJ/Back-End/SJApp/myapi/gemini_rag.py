@@ -92,7 +92,7 @@ def generate_answer(db,query):
 
 def run_llm(query):
     
-    pdf_upload_path = "/Users/ashmithapais/17thMay/SocialJusticeTool/ApplicationSJ/Back-End/SJApp/media/pdf_uploads"
+    pdf_upload_path ="/Users/supriya/SF state/research project/SocialJusticeTool/ApplicationSJ/Back-End/SJApp/media/pdf_uploads"
     pdf_path = pdf_upload_path+'/file1.pdf'
 
     # Load the PDF file
