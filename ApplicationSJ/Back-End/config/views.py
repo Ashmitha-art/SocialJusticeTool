@@ -9,18 +9,7 @@ from django.http import FileResponse
 import os
 from django.conf import settings
 
-from myapi.gemini_rag import run_llm 
 
-@api_view(['GET'])
-def search_view(request):
-    query = request.GET.get('query', '')
-    if not query:
-        return JsonResponse({'error': 'Query parameter is required'}, status=400)
-    
-    # Run the LLM function with the provided query
-    answer = run_llm(query=query)
-    
-    return JsonResponse({'answer': answer})
 
 @api_view(['GET'])
 def hello_world(request):
