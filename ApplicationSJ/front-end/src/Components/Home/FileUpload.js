@@ -14,9 +14,9 @@ const FileUpload = ({ onFileChange, onUpload }) => {
 
   return (
     <div className="input-container">
-      <input type="file" name="file" onChange={handleFileChange} />
+      <input type="file" name="file" onChange={handleFileChange}/>
       <button className="search-button" onClick={handleUpload} disabled={!selectedFile}>
-        Upload
+      Upload
       </button>
     </div>
   );

@@ -27,9 +27,10 @@ input[type="text"] {
 }
 
 input[type="file"] {
-  margin-right: 10px;
+  margin-right: 0px;
   width: 80%;
 }
+
 
 .search-button {
   padding: 10px 20px;
