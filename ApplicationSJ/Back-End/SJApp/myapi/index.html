@@ -82,6 +82,23 @@
         height: 15px;
         margin-right: 5px;
       }
+
+      /* New styles for the image container */
+      #image-container {
+        margin-top: 30px; /* Space above the image container */
+        width: 90%;
+        max-width: 900px; /* Max width for responsiveness */
+        border: 1px solid #ccc; /* Border around the image container */
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center; /* Center the image inside the container */
+        background-color: #ffffff;
+      }
+
+      #image-container img {
+        max-width: 100%; /* Make the image responsive */
+        border-radius: 5px; /* Rounded corners for the image */
+      }
     </style>
   </head>
   <body>
@@ -89,9 +106,15 @@
 
     <!-- File input to upload the Excel file -->
     <input type="file" id="fileInput" accept=".xlsx" />
-    <br />
+
     <!-- Placeholder for the charts -->
     <div id="charts"></div>
+
+    <!-- New container for the image -->
+    <div id="image-container">
+      <h3>Word Cloud</h3>
+      <img id="loadedImage" src="" alt="Loaded Image" />
+    </div>
 
     <script>
       // Set the dimensions and margins of the graphs
@@ -122,7 +145,7 @@
         const x = d3.scaleBand().range([0, width]).padding(0.2);
         const y = d3.scaleLinear().range([height, 0]);
 
-        x.domain(data.map((d) => d.section));
+        x.domain(data.map((d) => d.subheading));
         y.domain([0, 1]); // Sentiment scores range from 0 to 1
 
         svg.selectAll("*").remove(); // Clear previous bars
@@ -145,7 +168,7 @@
           .data(data)
           .enter()
           .append("rect")
-          .attr("x", (d) => x(d.section))
+          .attr("x", (d) => x(d.subheading))
           .attr("y", (d) => y(d[scoreType]))
           .attr("width", x.bandwidth())
           .attr("height", (d) => height - y(d[scoreType]))
@@ -159,7 +182,7 @@
             "transform",
             `translate(${width / 2},${height + margin.bottom - 10})`
           )
-          .text("Section");
+          .text("Subheading");
 
         svg
           .append("text")
@@ -225,9 +248,9 @@
           // Convert worksheet to JSON
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-          // Prepare data for the chart, ignoring the 'text' column
+          // Prepare data for the chart, referencing the 'subheading' column
           const chartData = jsonData.map((row) => ({
-            section: row["section"],
+            subheading: row["subheading"],
             compound: row["compound"],
             pos: row["pos"],
             neu: row["neu"],
@@ -235,31 +258,37 @@
           }));
 
           // Create and update charts for compound, positive, neutral, and negative sentiment scores
-          const svgCompound = createSvg("Compound Sentiment Score");
-          updateChart(svgCompound, chartData, "compound");
+          const compoundSvg = createSvg("Compound Sentiment Scores");
+          updateChart(compoundSvg, chartData, "compound");
 
-          const svgPos = createSvg("Positive Sentiment Score");
-          updateChart(svgPos, chartData, "pos");
+          const posSvg = createSvg("Positive Sentiment Scores");
+          updateChart(posSvg, chartData, "pos");
 
-          const svgNeu = createSvg("Neutral Sentiment Score");
-          updateChart(svgNeu, chartData, "neu");
+          const neuSvg = createSvg("Neutral Sentiment Scores");
+          updateChart(neuSvg, chartData, "neu");
 
-          const svgNeg = createSvg("Negative Sentiment Score");
-          updateChart(svgNeg, chartData, "neg");
+          const negSvg = createSvg("Negative Sentiment Scores");
+          updateChart(negSvg, chartData, "neg");
         };
 
         reader.readAsArrayBuffer(file);
       }
 
-      // Event listener for file input
+      // File input event listener
       document
         .getElementById("fileInput")
-        .addEventListener("change", function (e) {
-          const file = e.target.files[0];
+        .addEventListener("change", (event) => {
+          const file = event.target.files[0];
           if (file) {
             readExcelFile(file);
           }
         });
+
+      // Load image when the page is loaded
+      window.onload = function () {
+        const imgElement = document.getElementById("loadedImage");
+        imgElement.src = "/mnt/data/Screenshot 2024-10-12 at 1.06.29 PM.png"; // Update with the correct path
+      };
     </script>
   </body>
 </html>

@@ -63,3 +63,8 @@ pgvector
 psycopg2-binary
 nltk
 openpyxl
+wordcloud
+d3
+xlsx
+d3-cloud
+pdfjs-dist

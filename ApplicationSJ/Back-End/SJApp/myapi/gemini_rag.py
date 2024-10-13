@@ -101,34 +101,61 @@ def read_pdf(file_path):
         for page_num in range(number_of_pages):
             page = reader.load_page(page_num)
             text += page.get_text()
+        
+        # Define subheadings
+        subheadings = [
+            'Course Description',
+            'Instructor Contact'
+            'Class Communications',
+            'Course Objectives',
+            'Teaching Methods',
+            'Course Outcomes',
+            'Grading',
+            'Attendance policy'
+        ]
+        
+        # Use regular expressions to split text based on subheadings
+        pattern = '|'.join([re.escape(heading) for heading in subheadings])
+        sections = re.split(f"({pattern})", text)
+        
+        # Create a dictionary to store sections based on subheadings
+        section_data = {}
+        current_section = None
+        
+        for part in sections:
+            part = part.strip()
+            if part in subheadings:
+                current_section = part
+                section_data[current_section] = ""
+            elif current_section:
+                section_data[current_section] += part + "\n"
+        
+    return section_data
 
-        # Split text into sections based on common headings or keywords
-        parts = re.split(r'\n \n', text)  # Example split by paragraphs or a specific keyword
-        parts = [part for part in parts if part.strip()]  # Remove empty sections
-    return parts
 
-def get_sentiment_data(parts, output_excel_path="sentiment_analysis_results.xlsx", output_csv_path="sentiment_analysis_results.csv"):
+def get_sentiment_data(section_data, output_excel_path="sentiment_analysis_results.xlsx", output_csv_path="sentiment_analysis_results.csv"):
     sid = SentimentIntensityAnalyzer()
     sentiment_data = []
 
-    for i, part in enumerate(parts):
-        ss = sid.polarity_scores(part)
+    for heading, text in section_data.items():
+        ss = sid.polarity_scores(text)
         sentiment_data.append({
-            'section': i + 1,
-            'text': part,
+            'subheading': heading,
+            'text': text.strip(),
             'compound': ss['compound'],  # Overall sentiment score
             'pos': ss['pos'],
             'neu': ss['neu'],
             'neg': ss['neg']
         })
 
-    # Save sentiment data to Excel file
+    # Save sentiment data to Excel and CSV files
     df = pd.DataFrame(sentiment_data)
     df.to_excel(output_excel_path, index=False)
-    df.to_csv(output_csv_path, index=False)  # Save to CSV format
+    df.to_csv(output_csv_path, index=False)
 
     print(f"Sentiment analysis saved to {output_excel_path} and {output_csv_path}")
     return sentiment_data
+
 
 
 def run_llm(query):
@@ -143,10 +170,10 @@ def run_llm(query):
     pdf_path = os.path.join(pdf_upload_path, pdf_file_name)
 
     # Load and split the PDF into sections
-    pdf_parts = read_pdf(pdf_path)
+    section_data = read_pdf(pdf_path)
 
     # Perform sentiment analysis on the sections
-    sentiment_data = get_sentiment_data(pdf_parts)
+    sentiment_data = get_sentiment_data(section_data)
     print("Sentiment Data:", sentiment_data)
 
     # Initialize ChromaDB and add documents
@@ -156,7 +183,7 @@ def run_llm(query):
         db = None
   
     if db is None:
-        db = create_chroma_db(documents=pdf_parts, path="\\", name="sjt")
+        db = create_chroma_db(documents=list(section_data.values()), path="\\", name="sjt")
 
     # Generate an answer using the LLM
     answer = generate_answer(db, query=query)
