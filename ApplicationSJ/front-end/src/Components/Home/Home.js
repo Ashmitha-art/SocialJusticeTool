@@ -4,8 +4,7 @@ import FileUpload from './FileUpload'
 import SearchBar from './SearchBar'
 import AnswerDisplay from './AnswerDisplay';
 import { Link } from 'react-router-dom'
-import WordCloud from '../DataViz/WordCloud';
-import BarChart from '../DataViz/BarChart';
+
 
 
 
