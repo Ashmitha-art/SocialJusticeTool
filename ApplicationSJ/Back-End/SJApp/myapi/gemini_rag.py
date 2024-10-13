@@ -159,15 +159,17 @@ def get_sentiment_data(section_data, output_excel_path="sentiment_analysis_resul
 
 
 def run_llm(query):
-    pdf_upload_path = os.getenv("PDF_UPLOAD_PATH")
-    pdf_file_name = os.getenv("PDF_FILE_NAME")
+    
+    pdf_upload_path ="/Users/supriya/SF state/research project/SocialJusticeTool/ApplicationSJ/Back-End/SJApp/media/pdf_uploads"
+    pdf_path = pdf_upload_path+'/file1.pdf'
 
-    if not pdf_upload_path or not pdf_file_name:
-        raise ValueError("PDF_UPLOAD_PATH or PDF_FILE_NAME not provided. Please provide them as environment variables")
-
-    # Ensure the path is absolute
-    pdf_upload_path = os.path.abspath(pdf_upload_path)
-    pdf_path = os.path.join(pdf_upload_path, pdf_file_name)
+    # Load the PDF file
+    reader = PdfReader(pdf_path)
+    
+     # Loop over each page and store it in a variable
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text()
 
     # Load and split the PDF into sections
     section_data = read_pdf(pdf_path)
