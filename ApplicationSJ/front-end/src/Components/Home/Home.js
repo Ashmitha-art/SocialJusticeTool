@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
 import FileUpload from './FileUpload'
 import SearchBar from './SearchBar'
@@ -15,6 +15,7 @@ function Home() {
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
   };
+  
 
   const handleUpload = () => {
   if (file) {
@@ -58,8 +59,9 @@ const handleSearch = (searchTerm) => {
     <div className="container">
       <h1 className="title">Social Justice Tool</h1>
       <FileUpload onFileChange={handleFileChange} onUpload={handleUpload} />
-      <SearchBar onSearch={handleSearch} />
-      <AnswerDisplay answers={answers} />
+      
+      {/* <SearchBar onSearch={handleSearch} />
+      <AnswerDisplay answers={answers} /> */}
 
       <div>
         <h2>View Visualization</h2>

@@ -1,0 +1,94 @@
+﻿Course Description
+
+
+This course is an overview of correlation, simple regression, nonparametric measures of association, and multiple regression. These techniques will be presented from both a conceptual and a statistical standpoint. Emphasis will be placed on practical application and interpretation of the techniques in research and applied settings.
+
+
+Instructor Contact
+
+
+Instructor:
+Phone:
+Email:
+Office Hours: Monday 1-3pm (in-person or Zoom) & by appointment.
+Zoom Info: [To be provided]
+
+
+Class Communications
+
+
+The course schedule and all course materials are provided electronically via Canvas. The university requires that your SFSU e-mail account be used for Canvas communications. It is your responsibility to check this account for information related to this class.
+
+
+Course Objectives
+
+
+The objective of this course is to provide students with a thorough understanding of correlation, regression, and related techniques, along with the ability to apply these methods in practical and research settings. Students will learn how to:
+
+
+        •        Interpret statistical results
+        •        Apply regression techniques to real-world data
+        •        Understand the relationship between variables using nonparametric measures
+
+
+Teaching Methods
+
+
+        •        Lectures: In-person or via Zoom as needed
+        •        Assignments: Weekly tasks to apply and reinforce concepts
+        •        Exams: Three exams to assess conceptual knowledge and analytical skills
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Student Learning Outcomes
+
+
+By the end of the course, students will be able to:
+
+
+        •        Apply statistical methods in research contexts
+        •        Analyze data using correlation and regression techniques
+        •        Communicate statistical findings to diverse audiences
+
+
+Grading
+
+
+Your grade will be based on:
+
+
+        •        Assignments (40%): Designed to test technical knowledge and analysis skills.
+        •        Graded on a 10-point scale:
+        •        10 points: Accurate answer with full work shown
+        •        8 points: Partially correct with substantial effort
+        •        5 points: Incorrect answer with substantial effort
+        •        0 points: No submission or inadequate effort
+        •        Exams (60%): Three exams, one of which will be oral.
+
+
+Grade Scale:
+
+
+        •        A: 94%-100%
+        •        A-: 90%-93%
+        •        B+: 84%-89%
+        •        B-: 80%-83%
+        •        C: 70%-79%
+        •        F: 0%-69.9%
+
+
+Attendance Policy
+
+
+Course engagement is defined as attending all classes, participating in discussions, and being prepared with materials. You may have three absences without penalty. More than three absences will result in a 5% reduction in your final grade. For virtual meetings, video and audio must be enabled.
