@@ -4,6 +4,8 @@ import FileUpload from './FileUpload'
 import SearchBar from './SearchBar'
 import AnswerDisplay from './AnswerDisplay';
 import { Link } from 'react-router-dom'
+import BarChart from '../DataViz/BarChart';
+import WordCloud from '../DataViz/WordCloud';
 
 
 
@@ -11,12 +13,16 @@ import { Link } from 'react-router-dom'
 function Home() {
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState('');
+  const [visualization, setVisualization] = useState({});
+  const [selectedArray, setSelectedArray] = useState('CourseDescription'); 
 
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
   };
   
-
+  const handleArrayChange = (event) => {
+    setSelectedArray(event.target.value); // Update selected array when dropdown changes
+  };
   const handleUpload = () => {
   if (file) {
     // Create a FormData object and append the file to it
@@ -41,6 +47,14 @@ function Home() {
     console.error('No file selected');
   }
 };
+const handleGenerateVisualization = () => {
+  fetch(`http://127.0.0.1:8000/api/keywords`)
+  .then(response => response.json())
+  .then(data => {
+    //console.log('Response from backend:', data); 
+    setVisualization(data);
+  console.log('Visualization:', visualization);});
+}
 const handleSearch = (searchTerm) => {
   console.log('Searching for:', searchTerm); // Log the search term
 
@@ -62,14 +76,36 @@ const handleSearch = (searchTerm) => {
       
       {/* <SearchBar onSearch={handleSearch} />
       <AnswerDisplay answers={answers} /> */}
+      <div>
+        <button onClick={handleGenerateVisualization}>Generate Visualization</button>
+      </div>
 
       <div>
-        <h2>View Visualization</h2>
-        <ul>
-          <li><Link to="/wordcloud"> Word Cloud</Link></li>
-          <li><Link to="/barchart"> Bar Chart </Link></li>
+        <h2>Filter Data</h2>
+        {/* Dropdown to select between arrays */}
+        <select value={selectedArray} onChange={handleArrayChange}>
+          <option value="CourseDescription">Course Description</option>
+          <option value="InstructorContact">Instructor Contact</option>
+          <option value="ClassCommunications">Class Communications</option>
+          <option value="CourseObjectives">Course Objectives</option>
+          <option value="TeachingMethods">Teaching Methods</option>
+          <option value="StudentLearningOutcomes">Student Learning Outcomes</option>
+          <option value="Grading">Grading</option>
+          <option value="AttendancePolicy">Attendance Policy</option>
+        </select>
+      </div>
+      <div>
+       
+       
+        {/* Conditionally pass the selected array */}
+        {visualization[selectedArray] && (
+          <div>
+            <BarChart data={visualization[selectedArray]} />
+            <WordCloud data={visualization[selectedArray]} />
+          </div>
+        )}
+    
       
-        </ul>
         </div>
     </div>
   );

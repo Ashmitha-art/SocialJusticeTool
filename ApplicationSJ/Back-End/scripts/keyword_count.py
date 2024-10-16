@@ -36,24 +36,24 @@ def process_text(text):
     # Calculate frequency distribution
     fdist = FreqDist(keywords)
 
-    return fdist.most_common(10)  # Return top 10 keywords, modify this as needed
+    # Return top 25 keywords in a list of dict format
+    return [{"word": word, "frequency": count} for word, count in fdist.most_common(25)]
 
 def get_keyword_frequency_by_section(file_path):
- 
     # Open the text file and read its content
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
 
     # Define the section titles based on your syllabus
     sections = {
-        'Course Description': 'Course Description',
-        'Instructor Contact': 'Instructor Contact',
-        'Class communications': 'Class communications',
-        'Course Objectives': 'Course Objectives',
-        'Teaching Methods': 'Teaching Methods',
-        'Student Learning Outcomes': 'Student Learning Outcomes',
-        'Grading': 'Grading',
-        'Attendance policy': 'Attendance policy'
+        'CourseDescription': 'Course Description',
+        'InstructorContact': 'Instructor Contact',
+        'ClassCommunications': 'Class communications',
+        'CourseObjectives': 'Course Objectives',
+        'TeachingMethods': 'Teaching Methods',
+        'StudentLearningOutcomes': 'Student Learning Outcomes',
+        'Grading': 'Grading'
+        
     }
 
     # Create a dictionary to store keyword frequencies for each section
@@ -71,9 +71,9 @@ def get_keyword_frequency_by_section(file_path):
     return section_keywords
 
 # Example usage:
-file_path = '../media/text_uploads/sample_syllabus.txt'
-section_keywords = get_keyword_frequency_by_section(file_path)
+# file_path = '../media/text_uploads/sample_syllabus.txt'
+# section_keywords = get_keyword_frequency_by_section(file_path)
 
-# Print the keyword frequency by section
-for section, keywords in section_keywords.items():
-    print(f"{section}: {keywords}")
+# # Print the keyword frequency by section
+# for section, keywords in section_keywords.items():
+#     print(f"{section}: {keywords}")

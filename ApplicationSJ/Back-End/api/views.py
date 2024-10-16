@@ -10,7 +10,27 @@ import os
 from django.conf import settings
 from scripts import keyword_count
 
+def get_keywords(request):
+    # Define the folder where the files are uploaded
+    upload_folder = './media/text_uploads/'
+    
+    # Get the list of all files in the folder
+    files = [f for f in os.listdir(upload_folder) if os.path.isfile(os.path.join(upload_folder, f))]
 
+    if not files:
+        return JsonResponse({"error": "No files found in the upload folder"}, status=400)
+
+    # Sort files by modification date (newest first)
+    files.sort(key=lambda f: os.path.getmtime(os.path.join(upload_folder, f)), reverse=True)
+
+    # Pick the most recent file
+    latest_file = files[0]
+    file_path = os.path.join(upload_folder, latest_file)
+
+    # Now use this file in your keyword processing function
+    keywords = keyword_count.get_keyword_frequency_by_section(file_path)
+    
+    return JsonResponse(keywords, safe=False)
 
 @api_view(['GET'])
 def hello_world(request):
@@ -51,11 +71,7 @@ def save_file(uploaded_file, upload_dir):
     return file_path
 
 
-@api_view(['GET'])
-def get_keywords():
-    file_path = '../media/text_uploads/sample_syllabus.txt'
-    keywords = keyword_count.get_keyword_frequency_by_section(file_path)
-    return Response(keywords)
+
 
 
     

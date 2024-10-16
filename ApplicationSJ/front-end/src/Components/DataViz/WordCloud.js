@@ -4,34 +4,13 @@ import cloud from "d3-cloud";
 
 
 
-const WordCloud = () => {
-    const data = [
-    
-  { word: "class", frequency: 10 },
-  { word: "organ systems", frequency: 3.7 },
-  { word: "cadaver labs", frequency: 3.0 },
-  { word: "essay questions", frequency: 2.5 },
-  { word: "human body", frequency: 2.5 },
-  { word: "online resources", frequency: 2.4 },
-  { word: "electronic devices", frequency: 2.2 },
-  { word: "contemporary understanding", frequency: 2.1 },
-  { word: "electronically supported", frequency: 2.0 },
-  { word: "expected", frequency: 1.9 },
-  { word: "knowledge understanding", frequency: 1.9 },
-  { word: "interacted extensively", frequency: 1.8 },
-  { word: "performing dissections", frequency: 1.8 },
-  { word: "responsible", frequency: 1.8 },
-  { word: "anatomical structures", frequency: 1.7 },
-  { word: "accurately", frequency: 1.7 },
-  { word: "disarticulated bones", frequency: 1.7 },
-  { word: "virtual laboratory", frequency: 1.6 },
-  { word: "understand", frequency: 1.6 },
-  { word: "emergencies written", frequency: 1.6 }
-];
-      
+const WordCloud = ({data}) => {
+   
+     
   const svgRef = useRef();
 
   useEffect(() => {
+    
     // Set up dimensions
     const width = 600;
     const height = 400;
