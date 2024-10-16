@@ -28,7 +28,7 @@ def get_keywords(request):
     file_path = os.path.join(upload_folder, latest_file)
 
     # Now use this file in your keyword processing function
-    keywords = keyword_count.get_keyword_frequency_by_section(file_path)
+    keywords = keyword_count.get_keywords(file_path)
     
     return JsonResponse(keywords, safe=False)
 

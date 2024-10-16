@@ -8,6 +8,7 @@ from nltk.probability import FreqDist
 import re
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
+import PyPDF2
 
 def extract_section(text, start_keyword, end_keyword=None):
     """
@@ -39,11 +40,25 @@ def process_text(text):
     # Return top 25 keywords in a list of dict format
     return [{"word": word, "frequency": count} for word, count in fdist.most_common(25)]
 
-def get_keyword_frequency_by_section(file_path):
-    # Open the text file and read its content
-    with open(file_path, 'r', encoding='utf-8') as file:
-        text = file.read()
-
+def get_keywords(file_path):
+    text = ''
+    
+    if file_path.endswith('.pdf'):
+        # Open the PDF file
+        with open(file_path, 'rb') as file:
+            # Create a PDF file reader
+            pdf = PyPDF2.PdfReader(file)
+            
+            # Loop through each page and extract text
+            for page_num in range(len(pdf.pages)):
+                page = pdf.pages[page_num]
+                text += page.extract_text()
+                
+    elif file_path.endswith('.txt'):
+        # Open the text file and read its content
+        with open(file_path, 'r', encoding='utf-8') as file:
+            text = file.read()
+            
     # Define the section titles based on your syllabus
     sections = {
         'CourseDescription': 'Course Description',
