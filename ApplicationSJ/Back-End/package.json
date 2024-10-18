@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "chardet": "^2.0.0"
+  }
+}

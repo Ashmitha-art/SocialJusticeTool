@@ -1,5 +1,5 @@
 import nltk
-nltk.download('punkt_tab')
+nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 nltk.download('stopwords') 
@@ -10,16 +10,32 @@ from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 import PyPDF2
 
-def extract_section(text, start_keyword, end_keyword=None):
+def extract_sections(text):
     """
-    Extract the section of the text between two keywords.
+    Extract all sections and their corresponding text between LaTeX \section{} tags.
     """
-    start_index = text.find(start_keyword)
-    end_index = text.find(end_keyword, start_index) if end_keyword else len(text)
+    # Regex pattern to match sections in LaTeX format (\section{})
+    section_pattern = r'\\section\{(.+?)\}'
+   
+
+    # Find all section titles
+    section_titles = re.findall(section_pattern, text)
     
-    if start_index != -1:
-        return text[start_index:end_index].strip()
-    return None
+    # Split the text at each section title
+    sections = re.split(section_pattern, text)
+    
+    # Create a dictionary to store each section's content
+    section_dict = {}
+
+    
+    # Loop through the titles and their corresponding content
+    for i in range(1, len(sections), 2):  # Start at index 1 for section titles
+        title = sections[i]
+        content = sections[i + 1].strip() if i + 1 < len(sections) else ''
+        section_dict[title] = content
+    
+    return section_dict
+
 
 def process_text(text):
     """
@@ -58,36 +74,25 @@ def get_keywords(file_path):
         # Open the text file and read its content
         with open(file_path, 'r', encoding='utf-8') as file:
             text = file.read()
-            
-    # Define the section titles based on your syllabus
-    sections = {
-        'CourseDescription': 'Course Description',
-        'InstructorContact': 'Instructor Contact',
-        'ClassCommunications': 'Class communications',
-        'CourseObjectives': 'Course Objectives',
-        'TeachingMethods': 'Teaching Methods',
-        'StudentLearningOutcomes': 'Student Learning Outcomes',
-        'Grading': 'Grading'
-        
-    }
+
+    # Extract sections based on LaTeX-style tags (\section{})
+    sections = extract_sections(text)
 
     # Create a dictionary to store keyword frequencies for each section
     section_keywords = {}
 
     # Process each section and get keyword frequencies
-    for section, start_keyword in sections.items():
-        # Extract the section text
-        section_text = extract_section(text, start_keyword)
-
+    for section_title, section_text in sections.items():
+        print(section_title)
         if section_text:
             # Process the section text to get keyword frequency
-            section_keywords[section] = process_text(section_text)
+            section_keywords[section_title] = process_text(section_text)
     
     return section_keywords
 
 # Example usage:
-# file_path = '../media/text_uploads/sample_syllabus.txt'
-# section_keywords = get_keyword_frequency_by_section(file_path)
+# file_path = 'file1.pdf'
+# section_keywords = get_keywords(file_path)
 
 # # Print the keyword frequency by section
 # for section, keywords in section_keywords.items():
