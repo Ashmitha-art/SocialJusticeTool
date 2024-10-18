@@ -12,7 +12,9 @@ from scripts import keyword_count
 
 def get_keywords(request):
     # Define the folder where the files are uploaded
-    upload_folder = './media/text_uploads/'
+    print("get_keywords",request)
+    
+    upload_folder = './media/file_uploads/'
     
     # Get the list of all files in the folder
     files = [f for f in os.listdir(upload_folder) if os.path.isfile(os.path.join(upload_folder, f))]
@@ -42,10 +44,8 @@ def upload_file(request):
         uploaded_file = request.FILES['file']
         
         # Determine file type and set upload directory
-        if uploaded_file.name.endswith('.pdf'):
-            upload_dir = os.path.join(settings.MEDIA_ROOT, 'pdf_uploads')
-        elif uploaded_file.name.endswith('.txt'):
-            upload_dir = os.path.join(settings.MEDIA_ROOT, 'text_uploads')
+        if uploaded_file.name.endswith('.pdf') or uploaded_file.name.endswith('.txt'):
+            upload_dir = os.path.join(settings.MEDIA_ROOT, 'file_uploads')
         else:
             return JsonResponse({'message': 'Only PDF and text files are accepted'}, status=400)
         
