@@ -1,12 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
+import BarChart from '../DataViz/BarChart';
+import WordCloud from '../DataViz/WordCloud';
 
 
 
 export default function Questions() {
-    const [visualization, setVisualization] = useState({});
+    const [visualization, setVisualization] = useState();
     const [file, setFile] = useState(null);
-    const [selectedQuestion, setSelectedQuestion] = useState('');
+    const [selectedQuestion, setSelectedQuestion] = useState();
     const questions = [
       { id: 1, text: "How is this course content relevant to students' lives?" },
       { id: 2, text: "How does this course content improve lives of individuals or communities?" },
@@ -47,12 +49,13 @@ export default function Questions() {
     
 
     const handleGenerateVisualization = () => {
-        fetch(`http://127.0.0.1:8000/api/keywords`)
+        fetch(`http://127.0.0.1:8000/api/keywords/questions/${selectedQuestion}`)
         .then(response => response.json())
         .then(data => {
           //console.log('Response from backend:', data); 
           setVisualization(data);
         console.log('Visualization:', visualization);});
+    
       }
   return (
   
@@ -74,7 +77,7 @@ export default function Questions() {
             />
             
      
-          <button
+          <button style={{backgroundColor: "#7bc99a"}}
     onClick={handleUpload} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
   >
     Upload
@@ -100,17 +103,19 @@ export default function Questions() {
           </div>
           
   <div className="flex justify-center mt-4">
-    <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+    <button style={{backgroundColor: "#7bc99a"}} className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+    onClick={handleGenerateVisualization}>
       Generate Visualization
     </button>
   </div>
 
-          {selectedQuestion && (
+          {visualization &&
             <div className="mt-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">{selectedQuestion}</h2>
-              {/* <BarChart question={selectedQuestion} /> */}
+              
+              <BarChart data={visualization} />
+              <WordCloud data={visualization} />
             </div>
-          )}
+          }
         </div>
       );
   

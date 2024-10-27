@@ -52,7 +52,7 @@ const BarChart = ({data}) => {
       .attr('y', d => y(d.word))
       .attr('width', d => x(d.frequency))
       .attr('height', y.bandwidth())
-      .attr('fill', '#5187B7');
+      .attr('fill', '#7bc99a');
 
     // Add labels to the bars (inside the bars, aligned to the right)
     svg.selectAll('.label')

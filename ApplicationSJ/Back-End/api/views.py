@@ -9,13 +9,17 @@ from django.http import FileResponse
 import os
 from django.conf import settings
 from scripts import keyword_count
+from scripts import keyword_questions
 
 def get_keywords(request):
     # Define the folder where the files are uploaded
-    print("get_keywords",request)
-    
     upload_folder = './media/file_uploads/'
-    
+    file_path = get_latest_file(upload_folder)
+    keywords = keyword_count.get_keywords(file_path)
+    return JsonResponse(keywords, safe=False)
+
+def get_latest_file(upload_folder):
+    """Helper function to get the latest uploaded file in the specified folder."""
     # Get the list of all files in the folder
     files = [f for f in os.listdir(upload_folder) if os.path.isfile(os.path.join(upload_folder, f))]
 
@@ -28,11 +32,8 @@ def get_keywords(request):
     # Pick the most recent file
     latest_file = files[0]
     file_path = os.path.join(upload_folder, latest_file)
+    return file_path
 
-    # Now use this file in your keyword processing function
-    keywords = keyword_count.get_keywords(file_path)
-    
-    return JsonResponse(keywords, safe=False)
 
 @api_view(['GET'])
 def hello_world(request):
@@ -69,6 +70,18 @@ def save_file(uploaded_file, upload_dir):
     # Save keyword to database: todo
     
     return file_path
+
+api_view(['GET'])
+def get_keyword_questions(request,questionId):
+    """Helper function to get the latest uploaded file in the specified folder."""
+    upload_folder = './media/file_uploads/'
+    questionCsv= 'q'+ str(questionId)+'.csv'
+    csv_path ='./media/questions/'+questionCsv
+    file_path = get_latest_file(upload_folder)
+    data = keyword_questions.get_keyword_questions(csv_path , file_path)
+    return JsonResponse(data, safe=False)
+
+
 
 
 
