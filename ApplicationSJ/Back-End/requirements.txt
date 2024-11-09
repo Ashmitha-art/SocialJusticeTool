@@ -63,3 +63,5 @@ pgvector
 psycopg2-binary
 nltk
 openpyxl
+openai
+NRCLex
