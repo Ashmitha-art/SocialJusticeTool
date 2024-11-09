@@ -70,22 +70,26 @@ function Home() {
   };
 
   return (
-    <div className="container">
-      <h1 className="title">Social Justice Tool</h1>
-      <FileUpload onFileChange={handleFileChange} onUpload={handleUpload} />
+    <div>
+      <div className="container">
+        <h1 className="title">Social Justice Tool</h1>
+        <FileUpload onFileChange={handleFileChange} onUpload={handleUpload} />
 
-      {/* <SearchBar onSearch={handleSearch} />
+        {/* <SearchBar onSearch={handleSearch} />
       <AnswerDisplay answers={answers} /> */}
 
-      <div>
-        <button onClick={handleGenerateVisualization}>
-          Generate Visualization
-        </button>
-      </div>
+        <div>
+          <button
+            className="search-button"
+            onClick={handleGenerateVisualization}
+          >
+            Generate Visualization
+          </button>
+        </div>
 
-      <div>
+        {/* <div>
         <h2>Filter Data</h2>
-        {/* Dynamically generate dropdown options based on the visualization data */}
+
         <select value={selectedArray} onChange={handleArrayChange}>
           {Object.keys(visualization).map((sectionTitle) => (
             <option key={sectionTitle} value={sectionTitle}>
@@ -93,16 +97,25 @@ function Home() {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
-      <div>
-        {/* Conditionally render visualizations for the selected section */}
+        {/* <div>
+       
         {visualization[selectedArray] && (
           <div>
             <BarChart data={visualization[selectedArray]} />
             <WordCloud data={visualization[selectedArray]} />
           </div>
         )}
+      </div> */}
+      </div>
+      <div className="right-container">
+        <div className="right-column">
+          <div className="box">Box 1 Content</div>
+          <div className="box">Box 2 Content</div>
+          <div className="box">Box 3 Content</div>
+          <div className="box">Box 4 Content</div>
+        </div>
       </div>
     </div>
   );
