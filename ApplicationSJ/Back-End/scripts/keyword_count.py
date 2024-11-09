@@ -131,16 +131,7 @@ def get_keywords(file_path):
     return section_keywords
 
 
-# Example usage:
-# file_path = 'file1.pdf'
-# section_keywords = get_keywords(file_path)
 
 # # Print the keyword frequency by section
 # for section, keywords in section_keywords.items():
 #     print(f"{section}: {keywords}")
-
-# important key words 
-# sentiment analysis 
-# how big the section is compared to others 
-# emotion analysis 
-# sketch design for how to display visualization
