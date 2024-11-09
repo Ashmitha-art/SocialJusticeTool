@@ -79,7 +79,7 @@ input[type="file"] {
   padding: 15px;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 100px; /* Fixed height for square-like appearance */
+  height: 100%; /* Fixed height for square-like appearance */
   display: flex;
   align-items: center;
   justify-content: center;
