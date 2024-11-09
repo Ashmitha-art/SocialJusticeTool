@@ -6,6 +6,10 @@ import AnswerDisplay from "./AnswerDisplay";
 import { Link } from "react-router-dom";
 import BarChart from "../DataViz/BarChart";
 import WordCloud from "../DataViz/WordCloud";
+import SectionOne from "./SectionOne";
+import SectionTwo from "./SectionTwo";
+import SectionThree from "./SectionThree";
+import SectionFour from "./SectionFour";
 
 function Home() {
   const [file, setFile] = useState(null);
@@ -111,10 +115,18 @@ function Home() {
       </div>
       <div className="right-container">
         <div className="right-column">
-          <div className="box">Box 1 Content</div>
-          <div className="box">Box 2 Content</div>
-          <div className="box">Box 3 Content</div>
-          <div className="box">Box 4 Content</div>
+          <div className="box">
+            <SectionOne />
+          </div>
+          <div className="box">
+            <SectionTwo />
+          </div>
+          <div className="box">
+            <SectionThree />
+          </div>
+          <div className="box">
+            <SectionFour />
+          </div>
         </div>
       </div>
     </div>
