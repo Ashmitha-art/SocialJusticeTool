@@ -7,8 +7,8 @@ const WordCloud = ({ data }) => {
 
   useEffect(() => {
     // Set up dimensions
-    const width = 600;
-    const height = 400;
+    const width = 400;
+    const height = 300;
 
     // Clear previous SVG content
     d3.select(svgRef.current).selectAll("*").remove();

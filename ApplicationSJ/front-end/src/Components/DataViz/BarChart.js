@@ -11,7 +11,7 @@ const BarChart = ({data}) => {
     // Set up the dimensions and margins of the graph
     const margin = { top: 20, right: 30, bottom: 40, left: 100 },
       width = 500 - margin.left - margin.right,
-      height = 1000 - margin.top - margin.bottom;
+      height = 400 - margin.top - margin.bottom;
 
     // Clear any previous chart elements
     d3.select(chartRef.current).selectAll('*').remove();
@@ -68,7 +68,7 @@ const BarChart = ({data}) => {
 
   return (
     <div>
-      <h2>Word Frequency Bar Chart (Horizontal)</h2>
+    
       <svg ref={chartRef}></svg>
     </div>
   );

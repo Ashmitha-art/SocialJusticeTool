@@ -1,16 +1,22 @@
 import React from "react";
+import WordCloud from "../DataViz/WordCloud";
+import BarChart from "../DataViz/BarChart";
 
 function SectionTwo() {
+  const data = [
+    { word: "Hello", frequency: 10 },
+    { word: "World", frequency: 20 },
+    { word: "React", frequency: 15 },
+    { word: "D3", frequency: 5 },
+    { word: "Cloud", frequency: 7 },
+    { word: "Word", frequency: 12 },
+  ];
   return (
-    <div>
-      <h2>Section Two</h2>
-      <p>Content for Section Two.</p>
-      <img
-        src={`${process.env.PUBLIC_URL}/weather_heatmap.png`} // Correct path from the public folder
-        alt="Weather Heatmap"
-        style={{ width: "100%", height: "30%" }}
-      />
+    <div className="viz-element">
+       <BarChart data={data} />
+
     </div>
+
   );
 }
 
