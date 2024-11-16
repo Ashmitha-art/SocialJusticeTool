@@ -1,14 +1,11 @@
 import React from "react";
+import Heatmap from "./HeatMap"; // Import your Heatmap component
 
 function SectionOne() {
   return (
     <div className="viz-element">
-  
-      <img
-        src={`${process.env.PUBLIC_URL}/weather_heatmap.png`} // Correct path from the public folder
-        alt="Weather Heatmap"
-        style={{ width: "100%"}}
-      />
+      {/* Render the Heatmap component here */}
+      <Heatmap />
     </div>
   );
 }

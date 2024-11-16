@@ -1,0 +1,59 @@
+#heatmap {
+  margin: 0 auto;
+}
+
+.viz-element {
+  text-align: center;
+  margin: 20px;
+}
+
+.x-axis text {
+  font-size: 14px;
+  fill: #333;
+}
+
+.y-axis text {
+  font-size: 14px;
+  fill: #333;
+}
+
+/* heatmap.css */
+.heatmap-container {
+  width: 100%;
+  max-width: 900px; /* Increased width for better spacing */
+  height: auto;
+  overflow: hidden;
+  position: relative; /* Needed for the tooltip */
+}
+
+.tooltip {
+  position: absolute;
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: black;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Improve grid lines */
+.heatmap-container rect {
+  transition: stroke-width 0.2s ease; /* Smooth transition for strokes */
+}
+
+.heatmap-container rect:hover {
+  stroke-width: 2px;
+  stroke: #000;
+}
+
+/* Legend styling */
+.legend {
+  font-size: 12px;
+  fill: #333;
+}
+
+.legend .tick line {
+  stroke-width: 2px;
+}

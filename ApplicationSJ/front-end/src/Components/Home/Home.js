@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Home.css";
 import FileUpload from "./FileUpload";
-import SearchBar from "./SearchBar";
-import AnswerDisplay from "./AnswerDisplay";
-import { Link } from "react-router-dom";
-import BarChart from "../DataViz/BarChart";
-import WordCloud from "../DataViz/WordCloud";
+
 import SectionOne from "./SectionOne";
 import SectionTwo from "./SectionTwo";
 import SectionThree from "./SectionThree";
@@ -15,7 +11,10 @@ function Home() {
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState("");
   const [visualization, setVisualization] = useState({});
-  const [selectedArray, setSelectedArray] = useState(""); // Start as an empty string
+  const [selectedArray, setSelectedArray] = useState("");
+  const [isFileUploaded, setIsFileUploaded] = useState(false); // State for file upload
+  const [isVisualizationGenerated, setIsVisualizationGenerated] =
+    useState(false); // State for visualization generation
 
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
@@ -36,6 +35,7 @@ function Home() {
       })
         .then((response) => {
           console.log("File uploaded successfully");
+          setIsFileUploaded(true); // Set file uploaded state to true
         })
         .catch((error) => {
           console.error("Error uploading file:", error);
@@ -56,6 +56,8 @@ function Home() {
         setSelectedArray(firstSection);
 
         console.log("Visualization:", data);
+
+        setIsVisualizationGenerated(true); // Set visualization generated state to true
       });
   };
 
@@ -79,56 +81,36 @@ function Home() {
         <h1 className="title">Social Justice Tool</h1>
         <FileUpload onFileChange={handleFileChange} onUpload={handleUpload} />
 
-        {/* <SearchBar onSearch={handleSearch} />
-      <AnswerDisplay answers={answers} /> */}
-
         <div>
           <button
             className="search-button"
             onClick={handleGenerateVisualization}
+            disabled={!isFileUploaded} // Disable the button if no file is uploaded
           >
             Generate Visualization
           </button>
         </div>
-
-        {/* <div>
-        <h2>Filter Data</h2>
-
-        <select value={selectedArray} onChange={handleArrayChange}>
-          {Object.keys(visualization).map((sectionTitle) => (
-            <option key={sectionTitle} value={sectionTitle}>
-              {sectionTitle}
-            </option>
-          ))}
-        </select>
-      </div> */}
-
-        {/* <div>
-       
-        {visualization[selectedArray] && (
-          <div>
-            <BarChart data={visualization[selectedArray]} />
-            <WordCloud data={visualization[selectedArray]} />
-          </div>
-        )}
-      </div> */}
       </div>
-      <div className="right-container">
-        <div className="right-column">
-          <div className="box">
-            <SectionOne />
-          </div>
-          <div className="box">
-            <SectionTwo />
-          </div>
-          <div className="box">
-            <SectionThree />
-          </div>
-          <div className="box">
-            <SectionFour />
+
+      {/* Right column only displays after both conditions are met */}
+      {isFileUploaded && isVisualizationGenerated && (
+        <div className="right-container">
+          <div className="right-column">
+            <div className="box">
+              <SectionOne />
+            </div>
+            <div className="box">
+              <SectionTwo />
+            </div>
+            <div className="box">
+              <SectionThree />
+            </div>
+            <div className="box">
+              <SectionFour />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
