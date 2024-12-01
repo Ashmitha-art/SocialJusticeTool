@@ -1,0 +1,10 @@
+.y-axis-tick {
+    transition: fill 0.3s ease, font-size 0.3s ease;
+    cursor: pointer;
+}
+
+.y-axis-tick:hover {
+    fill: steelblue;    /* Changes the text color */
+    font-size: 1rem;    /* Increases font size slightly */
+    font-weight: bold;  /* Makes the text bold */
+}
