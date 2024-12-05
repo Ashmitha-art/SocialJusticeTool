@@ -1,0 +1,11 @@
+.state-filter-checkboxes {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9em;
+    stroke: black;
+}
+
+.state-select {
+    width: 250px;
+    border: 2px solid #4f4e4e;
+    border-radius: 4px;
+}
