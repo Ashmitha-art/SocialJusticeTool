@@ -12,7 +12,7 @@ import DataOrderFilter from '../DataViz/pages/DataOrderFilter';
 
 
 
-const DotPlotchart = () => {
+const DotPlotChart = () => {
     const data = [{
         state: "section 1",
         trust: 0.5,
@@ -92,8 +92,8 @@ const DotPlotchart = () => {
        
     ];
     const dimensions = {
-        width: 900,  // Width of the visualization area
-        height: 400, // Height of the visualization area
+        width: 400,  // Width of the visualization area
+        height: 300, // Height of the visualization area
         margin: {
             top: 50,
             right: 350,
@@ -334,11 +334,11 @@ const DotPlotchart = () => {
                     transform={`translate(${margin.left}, ${margin.top})`}
                 />
                 <g className="tooltip" style={{ opacity: 0 }}>
-                    <rect x="0" y="0" width="200" height="70" fill="#fff2ed" stroke="black" strokeWidth="1" rx="5" ry="5" />
+                    <rect x="0" y="0" width="120" height="80" fill="#fff2ed" stroke="black" strokeWidth="1" rx="5" ry="5" />
                     <text className="tooltip-text" x="10" y="25" style={{ fontSize: 12 }}></text>
                 </g>
                 <g className="tooltip1" style={{ opacity: 0 }}>
-                    <rect x="0" y="0" width="250" height="180" fill="#fff2ed" stroke="black" strokeWidth="1" rx="5" ry="5" />
+                    <rect x="0" y="0" width="120" height="120" fill="#fff2ed" stroke="black" strokeWidth="1" rx="5" ry="5" />
                     <text className="tooltip-text" x="10" y="25" style={{ fontSize: 12 }}></text>
                 </g>
                 <ColorLegend
@@ -392,4 +392,4 @@ const DotPlotchart = () => {
     );
 };
 
-export default DotPlotchart;
+export default DotPlotChart;

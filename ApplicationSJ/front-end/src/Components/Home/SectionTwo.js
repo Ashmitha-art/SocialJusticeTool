@@ -1,6 +1,6 @@
 import React from "react";
-import WordCloud from "../DataViz/WordCloud";
-import BarChart from "../DataViz/BarChart";
+import DotPlotChart from "../DataViz/DotPlotChart";
+
 
 function SectionTwo() {
   const data = [
@@ -13,7 +13,7 @@ function SectionTwo() {
   ];
   return (
     <div className="viz-element">
-       <BarChart data={data} />
+     <DotPlotChart/>
 
     </div>
 
