@@ -11,10 +11,10 @@ function SectionThree() {
     { word: "jobs", frequency: 12 },
   ];
   return (
-    <div className="viz-element">
+    
         <WordCloud data={data} />
 
-    </div>
+  
 
   );
 }
