@@ -5,7 +5,7 @@ function Heatmap() {
   useEffect(() => {
     // Fetch CSV data
     d3.csv(`${process.env.PUBLIC_URL}/heatmap_data.csv`).then((data) => {
-      const margin = { top: 50, right: 30, bottom: 120, left: 50 }; // Increased margin for clarity
+      const margin = { top: 80, right: 30, bottom: 120, left: 50 }; // Increased margin for clarity
       const width = 900 - margin.left - margin.right; // Adjusted width for better spacing
       const height = 500 - margin.top - margin.bottom; // Adjusted height for better spacing
 

@@ -5,6 +5,7 @@ import SectionOne from "./SectionOne";
 import SectionTwo from "./SectionTwo";
 import SectionThree from "./SectionThree";
 import SectionFour from "./SectionFour";
+import SentimentGraph from "../DataViz/SentimentGraph";
 
 function Home2() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -57,29 +58,14 @@ const handleUpload = () => {
 
   return (
     <div className="app-container">
-      <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-        <button onClick={() => setIsCollapsed(!isCollapsed)}>
-          {isCollapsed ? '>' : '<'}
-        </button>
-        <h1 className="title">Social Justice Tool</h1>
-        <FileUpload onFileChange={handleFileChange} onUpload={handleUpload} />
 
-        <div>
-          <button
-            className="search-button"
-            onClick={handleGenerateVisualization}
-            disabled={!isFileUploaded} // Disable the button if no file is uploaded
-          >
-            Generate Visualization
-          </button>
-        </div>
-      </div>
       <div className="main-content">
         <div className="visualization-grid">
           <div className="card">    <SectionOne /></div>
           <div className="card"><SectionTwo/></div>
           <div className="card"><SectionThree></SectionThree></div>
           <div className="card"><SectionFour/></div>
+          <div className="card"><SentimentGraph/></div>
         </div>
       </div>
     </div>

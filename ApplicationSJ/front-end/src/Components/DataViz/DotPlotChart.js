@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 
 // Constants
 const DIMENSIONS = {
-  width: 600,
+  width: 500,
   height: 400,
   margin: { top: 50, right: 350, bottom: 70, left: 70 }
 };
@@ -104,18 +104,38 @@ const EmotionCircles = ({ data, xScale, yScale, colorObjects, opacity, transform
   );
 };
 
-const Axis = ({ scale, transform, orientation = "bottom", tickSize = 0 }) => {
+// Modified Axis component to handle grid lines
+const Axis = ({ scale, transform, orientation = "bottom", tickSize = 0, gridLines = false, width = 0 }) => {
   const ref = useRef();
 
   useEffect(() => {
-    const axis = orientation === "bottom" 
-      ? d3.axisBottom(scale).tickSize(tickSize)
-      : d3.axisLeft(scale);
+    let axis;
     
-    d3.select(ref.current).call(axis);
-  }, [scale, orientation, tickSize]);
+    if (orientation === "bottom") {
+      axis = d3.axisBottom(scale).tickSize(tickSize);
+    } else {
+      // For left axis, we'll use tickSize if gridLines is true
+      axis = d3.axisLeft(scale).tickSize(gridLines ? -width : 0);
+    }
+    
+    const axisGroup = d3.select(ref.current);
+    axisGroup.call(axis);
+    
+    // Add specific styling for grid lines
+    if (gridLines) {
+      axisGroup.selectAll(".tick line")
+        .attr("stroke", "#969696")
+        .attr("stroke-dasharray", "3,3");
+        
+      // Remove the domain path for grid lines
+      if (orientation === "left") {
+        axisGroup.select(".domain").remove();
+      }
+    }
+    
+  }, [scale, orientation, tickSize, gridLines, width]);
 
-  return <g ref={ref} transform={transform} />;
+  return <g ref={ref} transform={transform} className={gridLines ? "grid-lines" : ""} />;
 };
 
 // Main Component
@@ -193,11 +213,41 @@ const DotPlotChart = ({ initialData }) => {
 
   return (
     <svg width={svgWidth} height={svgHeight}>
+      {/* Background grid container */}
+      <g transform={`translate(${margin.left}, ${margin.top})`}>
+        <rect
+          width={width}
+          height={height}
+          fill="none"
+          stroke="#e0e0e0"
+          strokeWidth={1}
+        />
+      </g>
+      
+      {/* Vertical grid lines */}
       <Axis 
         scale={xScale} 
         transform={`translate(${margin.left}, ${height + margin.top})`} 
         tickSize={-height}
+        gridLines={true}
       />
+      
+      {/* Horizontal grid lines */}
+      <Axis 
+        scale={yScale} 
+        transform={`translate(${margin.left}, ${margin.top})`} 
+        orientation="left"
+        gridLines={true}
+        width={width}
+      />
+      
+      {/* X-axis (regular) */}
+      <Axis 
+        scale={xScale} 
+        transform={`translate(${margin.left}, ${height + margin.top})`} 
+      />
+      
+      {/* Y-axis (regular) */}
       <Axis 
         scale={yScale} 
         transform={`translate(${margin.left}, ${margin.top})`} 
@@ -241,16 +291,7 @@ const DotPlotChart = ({ initialData }) => {
 
       <Tooltip {...tooltip} />
 
-      {/* Chart title */}
-      <text 
-        x={svgWidth / 2} 
-        y={30} 
-        textAnchor="middle" 
-        fontSize={25}
-      >
-        Sentiment Analysis
-      </text>
-
+  
       {/* Axis labels */}
       <text 
         x={svgWidth / 2} 

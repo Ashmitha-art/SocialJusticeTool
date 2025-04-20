@@ -47,45 +47,21 @@ const colorScale = d3.scaleOrdinal()
     "#4DB6AC", "#9575CD", "#FF8A65", "#7986CB", "#A1887F"
   ]);
 
-// Legend component
-const Legend = ({ nodes, colorScale }) => {
-  return (
-    <div className="bg-white p-4 rounded shadow-md h-full">
-      <h3 className="font-bold mb-3 text-sm border-b pb-2">Legend</h3>
-      <div className="flex flex-col space-y-3">
-        {nodes.map(node => (
-          <div key={node.id} className="flex items-center">
-            <div 
-              className="w-5 h-5 rounded-full mr-3 flex-shrink-0" 
-              style={{ backgroundColor: colorScale(node.id) }}
-            ></div>
-            <span className="text-sm">{node.name}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+// Dimensions with margin (similar to DotPlot approach)
+const DIMENSIONS = {
+  width: 500,
+  height: 400,
+  margin: { top: 50, right: 350, bottom: 70, left: 70 }
 };
 
 const NetworkGraph = () => {
   const svgRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const [dimensions, setDimensions] = useState(DIMENSIONS);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      const container = svgRef.current.parentElement;
-      setDimensions({
-        width: container.clientWidth,
-        height: Math.max(500, container.clientWidth * 0.6)
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => window.removeEventListener('resize', handleResize);
+  
   }, []);
 
   useEffect(() => {
@@ -95,31 +71,16 @@ const NetworkGraph = () => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     const svg = d3.select(svgRef.current)
-      .attr("width", dimensions.width)
-      .attr("height", dimensions.height)
-      .attr("viewBox", [0, 0, dimensions.width, dimensions.height]);
-
-    // Define arrow markers for the links
-    svg.append("defs").selectAll("marker")
-      .data(["end"])
-      .enter().append("marker")
-      .attr("id", d => `arrow-${d}`)
-      .attr("viewBox", "0 -5 10 10")
-      .attr("refX", 15)
-      .attr("refY", 0)
-      .attr("markerWidth", 6)
-      .attr("markerHeight", 6)
-      .attr("orient", "auto")
-      .append("path")
-      .attr("fill", "#999")
-      .attr("d", "M0,-5L10,0L0,5");
-
-    // Create a group for the graph
+      .attr("width", dimensions.width + dimensions.margin.left + dimensions.margin.right)
+      .attr("height", dimensions.height + dimensions.margin.top + dimensions.margin.bottom);
+    
+    // Create a group for the graph with margin transform
     const graph = svg.append("g")
+      .attr("transform", `translate(${dimensions.margin.left}, ${dimensions.margin.top})`)
       .attr("class", "graph");
 
     // Calculate node radius based on frequency
-    const nodeRadius = d => Math.sqrt(d.frequency) * 3 + 10;
+    const nodeRadius = d => Math.pow(d.frequency, 0.8) * 2 + 5;
 
     // Create the simulation
     const simulation = d3.forceSimulation(sampleData.nodes)
@@ -137,8 +98,8 @@ const NetworkGraph = () => {
       .selectAll("line")
       .data(sampleData.links)
       .enter().append("line")
-      .attr("stroke-width", d => Math.sqrt(d.weight) / 2 + 1)
-      .attr("stroke", "#999")
+      .attr("stroke-width", d => Math.pow(d.weight, 0.8) * 0.4 + 0.5)
+      .attr("stroke", "#f7cd9c")
       .attr("stroke-opacity", 0.6);
 
     // Create the nodes
@@ -169,7 +130,7 @@ const NetworkGraph = () => {
           setSelectedNode(null);
           // Reset all nodes and links
           node.attr("stroke", "#fff").attr("stroke-width", 1.5).attr("opacity", 1);
-          link.attr("stroke", "#999").attr("stroke-opacity", 0.6).attr("stroke-width", d => Math.sqrt(d.weight) / 2 + 1);
+          link.attr("stroke", "#f7cd9c").attr("stroke-opacity", 0.6).attr("stroke-width", d => Math.pow(d.weight, 0.8) * 0.4 + 0.5);
           label.style("font-weight", "normal").style("opacity", 1);
         } else {
           setSelectedNode(d);
@@ -231,21 +192,73 @@ const NetworkGraph = () => {
       .style("font-weight", "bold")
       .style("text-shadow", "0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white");
 
+    // Create SVG legend (similar to DotPlot's ColorLegend approach)
+    const legendGroup = svg.append("g")
+      .attr("transform", `translate(${dimensions.width + dimensions.margin.left + 50}, ${dimensions.margin.top + 50})`)
+      .attr("class", "legend");
+    
+    // Add title to legend
+    legendGroup.append("text")
+      .attr("x", 0)
+      .attr("y", -20)
+      .attr("font-weight", "bold")
+      .text("Legend");
+    
+    // Add legend items
+    const legendItems = legendGroup.selectAll(".legend-item")
+      .data(sampleData.nodes)
+      .enter()
+      .append("g")
+      .attr("class", "legend-item")
+      .attr("transform", (d, i) => `translate(0, ${i * 22})`)
+      .on("mouseover", (event, d) => {
+        // Highlight the corresponding node
+        node.filter(n => n.id === d.id)
+          .attr("stroke", "#000")
+          .attr("stroke-width", 2.5);
+      })
+      .on("mouseout", (event, d) => {
+        // Reset the node if it's not the selected node
+        if (selectedNode?.id !== d.id) {
+          node.filter(n => n.id === d.id)
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 1.5);
+        }
+      })
+      .style("cursor", "pointer");
+    
+    // Add colored circles
+    legendItems.append("circle")
+      .attr("r", 5)
+      .attr("fill", d => colorScale(d.id));
+    
+    // Add text labels
+    legendItems.append("text")
+      .attr("x", 12)
+      .attr("dy", ".32em")
+      .text(d => d.name);
+
     // Update positions on each tick of the simulation
     simulation.on("tick", () => {
+      // Keep nodes within bounds
+      sampleData.nodes.forEach(d => {
+        d.x = Math.max(nodeRadius(d), Math.min(dimensions.width - nodeRadius(d), d.x));
+        d.y = Math.max(nodeRadius(d), Math.min(dimensions.height - nodeRadius(d), d.y));
+      });
+
       link
-        .attr("x1", d => Math.max(nodeRadius(d.source), Math.min(dimensions.width - nodeRadius(d.source), d.source.x)))
-        .attr("y1", d => Math.max(nodeRadius(d.source), Math.min(dimensions.height - nodeRadius(d.source), d.source.y)))
-        .attr("x2", d => Math.max(nodeRadius(d.target), Math.min(dimensions.width - nodeRadius(d.target), d.target.x)))
-        .attr("y2", d => Math.max(nodeRadius(d.target), Math.min(dimensions.height - nodeRadius(d.target), d.target.y)));
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
 
       node
-        .attr("cx", d => Math.max(nodeRadius(d), Math.min(dimensions.width - nodeRadius(d), d.x)))
-        .attr("cy", d => Math.max(nodeRadius(d), Math.min(dimensions.height - nodeRadius(d), d.y)));
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
 
       label
-        .attr("x", d => Math.max(nodeRadius(d), Math.min(dimensions.width - nodeRadius(d), d.x)))
-        .attr("y", d => Math.max(nodeRadius(d), Math.min(dimensions.height - nodeRadius(d), d.y)));
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
     });
 
     // Drag functions
@@ -270,10 +283,12 @@ const NetworkGraph = () => {
     const zoom = d3.zoom()
       .scaleExtent([0.5, 5])
       .on("zoom", (event) => {
-        graph.attr("transform", event.transform);
+        graph.attr("transform", `translate(${event.transform.x + dimensions.margin.left}, ${event.transform.y + dimensions.margin.top}) scale(${event.transform.k})`);
       });
 
     svg.call(zoom);
+
+
 
     // Cleanup function
     return () => {
@@ -281,104 +296,120 @@ const NetworkGraph = () => {
     };
   }, [dimensions]);
 
+  // Calculate full dimensions for container
+  const svgWidth = dimensions.width + dimensions.margin.left + dimensions.margin.right;
+  const svgHeight = dimensions.height + dimensions.margin.top + dimensions.margin.bottom;
+
   return (
-    <div className="w-full h-full">
-      <div className="bg-gray-100 p-4 rounded-lg shadow-md h-full">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h2 className="text-xl font-bold">Social Justice Themes Network Graph</h2>
-            <p className="text-sm text-gray-600">
-              Visualizing interconnections between social justice themes in syllabus content
-            </p>
-          </div>
-          {selectedNode && (
-            <button 
-              onClick={() => {
-                setSelectedNode(null);
-                // Reset all nodes and links - this needs to reference the current d3 selections
-                d3.select(svgRef.current).selectAll(".nodes circle")
-                  .attr("stroke", "#fff")
-                  .attr("stroke-width", 1.5)
-                  .attr("opacity", 1);
-                  
-                d3.select(svgRef.current).selectAll(".links line")
-                  .attr("stroke", "#999")
-                  .attr("stroke-opacity", 0.6)
-                  .attr("stroke-width", d => Math.sqrt(d.weight) / 2 + 1);
-                  
-                d3.select(svgRef.current).selectAll(".labels text")
-                  .style("font-weight", "normal")
-                  .style("opacity", 1);
-              }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition-colors"
-            >
-              Reset View
-            </button>
-          )}
+    <div style={{ width: "100%", position: "relative" }}>
+      <svg ref={svgRef} width={svgWidth} height={svgHeight}></svg>
+      
+      {/* Tooltip for hovering - positioned using absolute positioning */}
+      {hoveredNode && (
+        <div style={{
+          position: "absolute",
+          left: hoveredNode.x + dimensions.margin.left + 10,
+          top: hoveredNode.y + dimensions.margin.top - 10,
+          backgroundColor: "white",
+          padding: "8px",
+          borderRadius: "4px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+          fontSize: "12px",
+          pointerEvents: "none"
+        }}>
+          <p style={{ fontWeight: "bold", margin: "0 0 4px 0" }}>{hoveredNode.name}</p>
+          <p style={{ margin: "0 0 4px 0" }}>Frequency: {hoveredNode.frequency} occurrences</p>
+          <p style={{ margin: "0" }}>Connected to: {
+            sampleData.links
+              .filter(link => 
+                (typeof link.source === 'object' ? link.source.id : link.source) === hoveredNode.id || 
+                (typeof link.target === 'object' ? link.target.id : link.target) === hoveredNode.id
+              )
+              .length
+          } themes</p>
         </div>
-        
-        <div className="flex flex-row" style={{ height: dimensions.height }}>
-          {/* Main graph container */}
-          <div className="relative w-3/4">
-            <svg ref={svgRef} className="w-full h-full" />
-            {hoveredNode && (
-              <div className="absolute bg-white p-2 rounded shadow-md text-sm" 
-                  style={{ 
-                    left: Math.min(dimensions.width - 200, hoveredNode.x + 10), 
-                    top: Math.min(dimensions.height - 100, hoveredNode.y - 10) 
-                  }}>
-                <p className="font-bold">{hoveredNode.name}</p>
-                <p>Frequency: {hoveredNode.frequency} occurrences</p>
-                <p>Connected to: {
-                  sampleData.links
-                    .filter(link => 
-                      (typeof link.source === 'object' ? link.source.id : link.source) === hoveredNode.id || 
-                      (typeof link.target === 'object' ? link.target.id : link.target) === hoveredNode.id
-                    )
-                    .length
-                } themes</p>
-              </div>
-            )}
-            
-            {selectedNode && (
-              <div className="absolute bottom-4 left-4 bg-white p-3 rounded shadow-md text-sm">
-                <p className="font-bold text-base mb-1">{selectedNode.name}</p>
-                <p className="mb-2">This theme appears <span className="font-semibold">{selectedNode.frequency}</span> times in the syllabus.</p>
-                
-                <p className="font-bold mt-2 mb-1">Connected themes:</p>
-                <ul className="list-disc pl-5">
-                  {sampleData.links
-                    .filter(link => 
-                      (typeof link.source === 'object' ? link.source.id : link.source) === selectedNode.id || 
-                      (typeof link.target === 'object' ? link.target.id : link.target) === selectedNode.id
-                    )
-                    .map(link => {
-                      const connectedNodeId = 
-                        (typeof link.source === 'object' ? link.source.id : link.source) === selectedNode.id 
-                          ? (typeof link.target === 'object' ? link.target.id : link.target)
-                          : (typeof link.source === 'object' ? link.source.id : link.source);
-                      
-                      const connectedNode = sampleData.nodes.find(n => n.id === connectedNodeId);
-                      return (
-                        <li key={connectedNodeId} className="mb-1">
-                          <span className="font-medium">{connectedNode?.name}</span>
-                          <span className="text-gray-600"> (connection strength: {link.weight})</span>
-                        </li>
-                      );
-                    })
-                  }
-                </ul>
-                <p className="mt-3 text-xs text-gray-500">Click again to deselect</p>
-              </div>
-            )}
-          </div>
+      )}
+      
+      {/* Details panel for selected node - positioned in bottom left */}
+      {selectedNode && (
+        <div style={{
+          position: "absolute",
+          left: dimensions.margin.left + 10,
+          bottom: dimensions.margin.bottom + 10,
+          backgroundColor: "white",
+          padding: "12px",
+          borderRadius: "4px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+          fontSize: "14px",
+          maxWidth: "300px"
+        }}>
+          <p style={{ fontWeight: "bold", fontSize: "16px", margin: "0 0 6px 0" }}>{selectedNode.name}</p>
+          <p style={{ margin: "0 0 8px 0" }}>This theme appears <span style={{ fontWeight: "600" }}>{selectedNode.frequency}</span> times in the syllabus.</p>
           
-          {/* Legend container - fixed width and positioned to the right */}
-          <div className="w-1/4 pl-4">
-            <Legend nodes={sampleData.nodes} colorScale={colorScale} />
-          </div>
+          <p style={{ fontWeight: "bold", margin: "8px 0 4px 0" }}>Connected themes:</p>
+          <ul style={{ margin: "0", paddingLeft: "20px" }}>
+            {sampleData.links
+              .filter(link => 
+                (typeof link.source === 'object' ? link.source.id : link.source) === selectedNode.id || 
+                (typeof link.target === 'object' ? link.target.id : link.target) === selectedNode.id
+              )
+              .map(link => {
+                const connectedNodeId = 
+                  (typeof link.source === 'object' ? link.source.id : link.source) === selectedNode.id 
+                    ? (typeof link.target === 'object' ? link.target.id : link.target)
+                    : (typeof link.source === 'object' ? link.source.id : link.source);
+                
+                const connectedNode = sampleData.nodes.find(n => n.id === connectedNodeId);
+                return (
+                  <li key={connectedNodeId} style={{ marginBottom: "4px" }}>
+                    <span style={{ fontWeight: "500" }}>{connectedNode?.name}</span>
+                    <span style={{ color: "#666" }}> (connection strength: {link.weight})</span>
+                  </li>
+                );
+              })
+            }
+          </ul>
+          <p style={{ margin: "10px 0 0 0", fontSize: "12px", color: "#777" }}>Click again to deselect</p>
         </div>
-      </div>
+      )}
+      
+      {/* Reset button - positioned in top right */}
+      {selectedNode && (
+        <button 
+          onClick={() => {
+            setSelectedNode(null);
+            // Reset all nodes and links
+            d3.select(svgRef.current).selectAll(".nodes circle")
+              .attr("stroke", "#fff")
+              .attr("stroke-width", 1.5)
+              .attr("opacity", 1);
+              
+            d3.select(svgRef.current).selectAll(".links line")
+              .attr("stroke", "#f7cd9c")
+              .attr("stroke-opacity", 0.6)
+              .attr("stroke-width", d => Math.sqrt(d.weight) / 2 + 1);
+              
+            d3.select(svgRef.current).selectAll(".labels text")
+              .style("font-weight", "normal")
+              .style("opacity", 1);
+          }}
+          style={{
+            position: "absolute",
+            top: dimensions.margin.top / 2,
+            right: dimensions.margin.right / 2,
+            backgroundColor: "#3B82F6",
+            color: "white",
+            border: "none",
+            padding: "8px 16px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontWeight: "500",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+          }}
+        >
+          Reset View
+        </button>
+      )}
     </div>
   );
 };
