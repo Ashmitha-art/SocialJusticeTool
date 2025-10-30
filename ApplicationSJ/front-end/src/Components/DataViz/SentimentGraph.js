@@ -8,14 +8,14 @@ const SentimentGraph = () => {
   // Generate dummy data for sentiment analysis
   // Each section has positive, negative, and neutral values
   const data = [
-    { section: "Introduction", positive: 25, negative: 8, neutral: 12 },
-    { section: "Literature Review", positive: 18, negative: 15, neutral: 30 },
-    { section: "Methodology", positive: 12, negative: 5, neutral: 40 },
-    { section: "Results", positive: 30, negative: 10, neutral: 15 },
-    { section: "Discussion", positive: 22, negative: 18, neutral: 25 },
-    { section: "Limitations", positive: 8, negative: 32, neutral: 10 },
-    { section: "Conclusion", positive: 35, negative: 6, neutral: 14 },
-    { section: "References", positive: 5, negative: 2, neutral: 8 }
+    { section: "Course Description", positive: 25, negative: 8, neutral: 12 },
+    { section: "Instructor Contact", positive: 18, negative: 15, neutral: 30 },
+    { section: "Course Objectives", positive: 12, negative: 5, neutral: 40 },
+    { section: "Teaching Methods", positive: 30, negative: 10, neutral: 15 },
+    { section: "Course Outcomes", positive: 22, negative: 18, neutral: 25 },
+    { section: "Grading", positive: 8, negative: 32, neutral: 10 },
+    { section: "Attendance Policy", positive: 35, negative: 6, neutral: 14 },
+    { section: "DPRC", positive: 5, negative: 2, neutral: 8 }
   ];
   
   useEffect(() => {

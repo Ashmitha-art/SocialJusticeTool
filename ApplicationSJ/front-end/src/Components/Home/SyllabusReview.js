@@ -9,7 +9,7 @@ import SentimentGraph from '../DataViz/SentimentGraph';
 const SyllabusReview = () => {
   // Sample data (you'll replace with actual data from your backend)
   const syllabusData = {
-    title: "Title goes here",
+    title: "",
     wordCount: 1234,
     fileName: "file1.pdf"
   };
@@ -77,9 +77,9 @@ const SyllabusReview = () => {
                 <p className="text-gray-500">
                   <span className="font-medium text-gray-700">File:</span> {syllabusData.fileName}
                 </p>
-                <p className="text-gray-500">
-                  <span className="font-medium text-gray-700">Word Count:</span> {syllabusData.wordCount.toLocaleString()}
-                </p>
+                {/* <p className="text-gray-500">
+                  <span className="font-medium text-gray-700">Word Count:</span> 
+                </p> */}
               </div>
             </div>
           </div>

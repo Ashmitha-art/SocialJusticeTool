@@ -1,22 +1,64 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import WordCloud from "../DataViz/WordCloud";
 
 function SectionThree() {
-  const data = [
-    { word: "social", frequency: 9 },
-    { word: "inclusive", frequency: 7 },
-    { word: "report", frequency: 10 },
-    { word: "data", frequency: 5 },
-    { word: "assignment", frequency: 7 },
-    { word: "jobs", frequency: 12 },
-  ];
+  // State to store the data from the API
+  const [chartData, setChartData] = useState([]);
+  // State to track loading status
+  const [loading, setLoading] = useState(true);
+  // State to track errors
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Function to fetch data from the API
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("http://127.0.0.1:8000/api/wordcloud/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // The data from the API is already in the correct format
+        setChartData(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array means this effect runs once on mount
+
+  // Render loading state
+  if (loading) {
+    return <div>Loading chart data...</div>;
+  }
+
+  // Render error state
+  if (error) {
+    return <div>Error loading chart data: {error}</div>;
+  }
+
   return (
-    
-        <WordCloud data={data} />
-
-  
-
+    <div>
+      {chartData.length > 0 ? (
+        <WordCloud data={chartData} />
+      ) : (
+        <div>No data available</div>
+      )}
+    </div>
   );
 }
+
 
 export default SectionThree;

@@ -125,7 +125,7 @@ const LandingPage = () => {
         >
           <Upload size={48} className="text-indigo-500 mb-4" />
           <p className="text-gray-700 mb-4 font-medium">
-            {fileName ? `File selected: ${fileName}` : 'Drag & drop your syllabus here (PDF only)'}
+            {fileName ? `File selected: ${fileName}` : 'Drag & drop your syllabus here'}
           </p>
           {fileError && <p className="text-red-500 text-sm mb-2">{fileError}</p>}
           <p className="text-gray-500 text-sm mb-6">

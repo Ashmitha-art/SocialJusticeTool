@@ -4,48 +4,51 @@ import * as d3 from 'd3';
 // Sample data representing social justice themes and connections
 const sampleData = {
   nodes: [
-    { id: "diversity", name: "Diversity", frequency: 25 },
-    { id: "equity", name: "Equity", frequency: 30 },
-    { id: "inclusion", name: "Inclusion", frequency: 22 },
-    { id: "racial_justice", name: "Racial Justice", frequency: 18 },
-    { id: "gender_equality", name: "Gender Equality", frequency: 15 },
-    { id: "environmental_justice", name: "Environmental Justice", frequency: 12 },
-    { id: "social_justice", name: "Social Justice", frequency: 28 },
-    { id: "disability_rights", name: "Disability Rights", frequency: 10 },
-    { id: "lgbtq_rights", name: "LGBTQ+ Rights", frequency: 14 },
-    { id: "indigenous_rights", name: "Indigenous Rights", frequency: 8 }
+    { id: "relevance_impact", name: "Relevance & Impact", frequency: 40 },
+    { id: "growth_mindset", name: "Growth Mindset", frequency: 25 },
+    { id: "clarity_purpose", name: "Clarity & Purpose", frequency: 12 },
+    { id: "tone_language", name: "Tone & Language", frequency: 22 },
+    { id: "inclusivity", name: "Inclusivity", frequency: 30 },
+    { id: "equity", name: "Equity", frequency: 20 },
+    { id: "support_accessibility", name: "Support & Accessibility", frequency: 18 },
+    { id: "instructor_transparency", name: "Instructor Transparency", frequency: 26 }
   ],
   links: [
-    { source: "diversity", target: "inclusion", weight: 20 },
-    { source: "diversity", target: "equity", weight: 15 },
-    { source: "equity", target: "inclusion", weight: 18 },
-    { source: "equity", target: "racial_justice", weight: 12 },
-    { source: "racial_justice", target: "social_justice", weight: 16 },
-    { source: "gender_equality", target: "equity", weight: 14 },
-    { source: "gender_equality", target: "social_justice", weight: 13 },
-    { source: "environmental_justice", target: "social_justice", weight: 10 },
-    { source: "environmental_justice", target: "indigenous_rights", weight: 7 },
-    { source: "disability_rights", target: "inclusion", weight: 9 },
-    { source: "disability_rights", target: "equity", weight: 8 },
-    { source: "lgbtq_rights", target: "inclusion", weight: 11 },
-    { source: "lgbtq_rights", target: "equity", weight: 10 },
-    { source: "lgbtq_rights", target: "gender_equality", weight: 12 },
-    { source: "indigenous_rights", target: "racial_justice", weight: 6 },
-    { source: "social_justice", target: "inclusion", weight: 17 },
-    { source: "social_justice", target: "equity", weight: 19 }
+    { source: "relevance_impact", target: "clarity_purpose", weight: 18 },
+    { source: "relevance_impact", target: "growth_mindset", weight: 15 },
+    { source: "relevance_impact", target: "tone_language", weight: 12 },
+    { source: "growth_mindset", target: "support_accessibility", weight: 14 },
+    { source: "growth_mindset", target: "instructor_transparency", weight: 17 },
+    { source: "clarity_purpose", target: "tone_language", weight: 20 },
+    { source: "clarity_purpose", target: "instructor_transparency", weight: 16 },
+    { source: "tone_language", target: "inclusivity", weight: 19 },
+    { source: "tone_language", target: "equity", weight: 13 },
+    { source: "inclusivity", target: "equity", weight: 22 },
+    { source: "inclusivity", target: "support_accessibility", weight: 18 },
+    { source: "inclusivity", target: "instructor_transparency", weight: 10 },
+    { source: "equity", target: "support_accessibility", weight: 16 },
+    { source: "equity", target: "instructor_transparency", weight: 9 },
+    { source: "support_accessibility", target: "instructor_transparency", weight: 14 }
   ]
 };
 
 // Color scheme for the nodes
 const colorScale = d3.scaleOrdinal()
   .domain([
-    "diversity", "equity", "inclusion", "racial_justice", "gender_equality", 
-    "environmental_justice", "social_justice", "disability_rights", "lgbtq_rights", "indigenous_rights"
+    "relevance_impact", "growth_mindset", "clarity_purpose", "tone_language", 
+    "inclusivity", "equity", "support_accessibility", "instructor_transparency"
   ])
   .range([
-    "#E57373", "#81C784", "#64B5F6", "#FFD54F", "#BA68C8", 
-    "#4DB6AC", "#9575CD", "#FF8A65", "#7986CB", "#A1887F"
+    "#FF7043", // Relevance & Impact - warm orange
+    "#66BB6A", // Growth Mindset - vibrant green
+    "#42A5F5", // Clarity & Purpose - clear blue
+    "#FFC107", // Tone & Language - amber
+    "#AB47BC", // Inclusivity - purple
+    "#26A69A", // Equity - teal
+    "#7E57C2", // Support & Accessibility - deep purple
+    "#FF5722"  // Instructor Transparency - deep orange
   ]);
+
 
 // Dimensions with margin (similar to DotPlot approach)
 const DIMENSIONS = {

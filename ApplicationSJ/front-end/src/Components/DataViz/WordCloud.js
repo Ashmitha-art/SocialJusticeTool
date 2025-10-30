@@ -7,7 +7,7 @@ const script = document.createElement('script');
 script.src = 'https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js';
 document.head.appendChild(script);
 
-const WordCloud = () => {
+const WordCloud = ({data}) => {
   const svgRef = useRef(null);
   
   useEffect(() => {
@@ -27,69 +27,7 @@ const WordCloud = () => {
 
   const createWordCloud = () => {
     // Academic paper sections with relevant keywords and frequencies
-    const data = [
-      // Introduction
-      { text: "Purpose", size: 70, section: "Introduction" },
-      { text: "Background", size: 65, section: "Introduction" },
-      { text: "Research", size: 60, section: "Introduction" },
-      { text: "Context", size: 55, section: "Introduction" },
-      { text: "Overview", size: 50, section: "Introduction" },
-      { text: "Problem", size: 45, section: "Introduction" },
-      
-      // Literature Review
-      { text: "Studies", size: 75, section: "Literature Review" },
-      { text: "Analysis", size: 70, section: "Literature Review" },
-      { text: "Previous", size: 65, section: "Literature Review" },
-      { text: "Framework", size: 60, section: "Literature Review" },
-      { text: "Theory", size: 55, section: "Literature Review" },
-      { text: "Findings", size: 50, section: "Literature Review" },
-      
-      // Methodology
-      { text: "Design", size: 72, section: "Methodology" },
-      { text: "Approach", size: 68, section: "Methodology" },
-      { text: "Participants", size: 64, section: "Methodology" },
-      { text: "Data", size: 60, section: "Methodology" },
-      { text: "Analysis", size: 56, section: "Methodology" },
-      { text: "Procedure", size: 52, section: "Methodology" },
-      
-      // Results
-      { text: "Findings", size: 78, section: "Results" },
-      { text: "Outcomes", size: 72, section: "Results" },
-      { text: "Analysis", size: 66, section: "Results" },
-      { text: "Significance", size: 60, section: "Results" },
-      { text: "Values", size: 54, section: "Results" },
-      { text: "Patterns", size: 48, section: "Results" },
-      
-      // Discussion
-      { text: "Interpretation", size: 75, section: "Discussion" },
-      { text: "Implications", size: 70, section: "Discussion" },
-      { text: "Comparison", size: 65, section: "Discussion" },
-      { text: "Relationship", size: 60, section: "Discussion" },
-      { text: "Insights", size: 55, section: "Discussion" },
-      { text: "Meaning", size: 50, section: "Discussion" },
-      
-      // Limitations
-      { text: "Constraints", size: 65, section: "Limitations" },
-      { text: "Factors", size: 60, section: "Limitations" },
-      { text: "Bias", size: 55, section: "Limitations" },
-      { text: "Scope", size: 50, section: "Limitations" },
-      { text: "Challenges", size: 45, section: "Limitations" },
-      
-      // Conclusion
-      { text: "Summary", size: 72, section: "Conclusion" },
-      { text: "Implications", size: 67, section: "Conclusion" },
-      { text: "Future", size: 62, section: "Conclusion" },
-      { text: "Recommendations", size: 57, section: "Conclusion" },
-      { text: "Contribution", size: 52, section: "Conclusion" },
-      
-      // References
-      { text: "Citations", size: 60, section: "References" },
-      { text: "Sources", size: 55, section: "References" },
-      { text: "Authors", size: 50, section: "References" },
-      { text: "Publications", size: 45, section: "References" },
-      { text: "Literature", size: 40, section: "References" }
-    ];
-
+    
     // Clear any existing SVG content
     d3.select(svgRef.current).selectAll("*").remove();
 
@@ -109,14 +47,14 @@ const WordCloud = () => {
     const sections = [...new Set(data.map(d => d.section))];
     
     const pastelColors = [
-      "#FFB6C1", // Light Pink - Introduction
-      "#AFEEEE", // Pale Turquoise - Literature Review
-      "#FFFACD", // Lemon Chiffon - Methodology
-      "#D8BFD8", // Thistle - Results
-      "#98FB98", // Pale Green - Discussion
-      "#FFE4B5", // Moccasin - Limitations
-      "#B0E0E6", // Powder Blue - Conclusion
-      "#F0E68C"  // Khaki - References
+      "#FF69B4", // Light Pink - Introduction
+      "#20B2AA", // Pale Turquoise - Literature Review
+      "#9370DB", // Lemon Chiffon - Methodology
+      "#DA70D6", // Thistle - Results
+      "#32CD32", // Pale Green - Discussion
+      "#FF7F50", // Moccasin - Limitations
+      "#87CEEB", // Powder Blue - Conclusion
+      "#DAA520"  // Khaki - References
     ];
 
     const colorScale = d3.scaleOrdinal()
